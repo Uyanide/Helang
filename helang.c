@@ -4,12 +4,19 @@
 #include <stdlib.h>
 #include <string.h>
 
+static const size_t FLAGS_CAP_INIT = 10;
+static const size_t FLAGS_CAP_FACT = 2;
+
 u8* he_parse_flags(const char* flags, size_t* size) {
     u8* ret     = NULL;
     char* cpy   = strdup(flags);
     char* token = strtok(cpy, "|");
+    size_t cap  = 0;
     do {
-        ret            = (u8*)realloc(ret, sizeof(u8) * ((*size) + 1));
+        while (*size >= cap) {
+            cap = cap ? cap * FLAGS_CAP_FACT : FLAGS_CAP_INIT;
+            ret = (u8*)realloc(ret, sizeof(u8) * (cap));
+        }
         ret[(*size)++] = (u8)atoi(token);
     } while ((token = strtok(NULL, "|")) != NULL);
     free(cpy);
