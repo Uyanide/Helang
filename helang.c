@@ -1,8 +1,34 @@
 #include "helang.h"
 
-#include <stdarg.h>
-#include <stdlib.h>
 #include <string.h>
+
+#ifndef U8_COMPLEX_TYPE
+
+u8 strtou8_l(const char* str, char** end) {
+    return (u8)strtol(str, end, 10);
+}
+
+u8 strtou8_ul(const char* str, char** end) {
+    return (u8)strtoul(str, end, 10);
+}
+
+u8 strtou8_f(const char* str, char** end) {
+    return (u8)strtof(str, end);
+}
+
+u8 strtou8_d(const char* str, char** end) {
+    return (u8)strtod(str, end);
+}
+
+u8 strtou8_ll(const char* str, char** end) {
+    return (u8)strtoll(str, end, 10);
+}
+
+u8 strtou8_ull(const char* str, char** end) {
+    return (u8)strtoull(str, end, 10);
+}
+
+#endif
 
 int he_invoke(HE_FUNC func, const char* flags_str, ...) {
     // Calculate number of flags
@@ -21,12 +47,12 @@ int he_invoke(HE_FUNC func, const char* flags_str, ...) {
             p++;
             continue;
         }
-        long val = strtol(p, &end, 10);
+        u8 val = strtou8(p, &end);
         if (p == end) {
             p++;
             continue;
         }
-        flags[size++] = (u8)val;
+        flags[size++] = val;
         p             = end;
     }
 

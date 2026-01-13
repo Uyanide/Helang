@@ -1,8 +1,7 @@
 #include "power.h"
 
 #include <stdio.h>
-
-#include "helang.h"
+#include <stdlib.h>
 
 HE_IMPLEMENT(powerCon_impl) {
     printf("Flags: ");

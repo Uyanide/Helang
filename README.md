@@ -33,7 +33,7 @@ size = 3;
 >
 > 完整的示例可以在[main.c](main.c)、[power.h](power.h) 和 [power.c](power.c) 中找到。
 
-1. 首先你需要自己的头文件和实现文件，例如 `myfunc.h` 和 `myfunc.c`。二者均需包含 `helang.h` 头文件：
+1. 首先你需要自己的头文件和实现文件，例如 `myfunc.h` 和 `myfunc.c`。：
 
    ```c
    // file: myfunc.h
@@ -50,7 +50,6 @@ size = 3;
    // file: myfunc.c
 
    #include "myfunc.h"
-   #include "helang.h"
    ```
 
 2. 在头文件中，你需要使用 `HE_DECLARE` 宏来声明你的函数接口。例如：
@@ -122,14 +121,66 @@ size = 3;
 
 ## 其他特性
 
-- 在 Helang 中，万物皆可 `u8`，万物皆为 `u8`。我们的实现也将尊重这一教义。这可以通过修改 `u8.h` 头文件实现。
+- 在 Helang 中，万物皆可 `u8`，万物皆为 `u8`。我们的实现也将尊重这一教义。
 
-  例如，如果你希望 `u8` 具有 32 位宽度：
+  - 如果你的 `u8` 属于简单类型，具体来说，（展开后）属于以下中的任意一种：
 
-  ```c
-  // file: u8.h
+    - `char`
+    - `unsigned char`
+    - `short`
+    - `unsigned short`
+    - `int`
+    - `unsigned int`
+    - `long`
+    - `unsigned long`
+    - `long long`
+    - `unsigned long long`
+    - `float`
+    - `double`
 
-  uint32_t // 你不需要包含 <stdint.h> 即可使用其中的类型
-  ```
+    那么你可以直接在 `u8.h` 文件中写入该类型。例如，如果你希望 `u8` 具有 32 位宽度：
 
-  是的，尽管你的 LSP 可能对此颇有微词，但你真的只需要将希望的类型写入 `u8.h` 文件中即可，并且可以随心所欲地添加注释和空行。
+    ```c
+    // file: u8.h
+
+    uint32_t // 你不需要包含 <stdint.h> 即可使用其中的类型
+    ```
+
+    是的，尽管你的 LSP 可能对此颇有微词，但你真的只需要将希望的类型写入 `u8.h` 文件中即可，并且可以随心所欲地添加注释和空行。
+
+  - 如果你的 `u8` 属于复杂类型，例如结构体或联合体，那么你需要在 `u8_complex.h` 文件中定义一个宏来通知 Helang 使用复杂类型，并定义该类型。例如：
+
+    ```c
+    // file: u8_complex.h
+
+    #define U8_COMPLEX_TYPE
+
+    typedef struct {
+        int field1;
+        float field2;
+    } u8;
+    ```
+
+    并同时提供一个静态变量 `HE_NULL` 一个函数 `strtou8`。前者用于表示 `u8` 类型的“空值”，后者用于将字符串转换为 `u8` 类型。例如：
+
+    ```c
+    // file: u8_complex.h
+
+    static const u8 HE_NULL = {};
+
+    u8 strtou8(const char*, char**); // 仅声明
+    ```
+
+    然后在随便什么源文件里实现 `strtou8` 即可：
+
+    ```c
+    // file: main.c
+
+    u8 strtou8(const char* str, char** end) {
+       u8 result;
+       // 你的转换逻辑
+       return result;
+    }
+    ```
+
+    `strtou8` 的行为应与 C 标准库中的类似函数一致，例如 `strtol` 和 `strtod`。
