@@ -12,8 +12,6 @@ typedef struct {
 
 u8 strtou8(const char* str, char** end);
 
-static const u8 HE_NULL = {0.0, 0.0};
-
 #endif  // HELANG_U8_COMPLEX_H
 
 #endif

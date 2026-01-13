@@ -161,12 +161,10 @@ size = 3;
     } u8;
     ```
 
-    并同时提供一个静态变量 `HE_NULL` 一个函数 `strtou8`。前者用于表示 `u8` 类型的“空值”，后者用于将字符串转换为 `u8` 类型。例如：
+    并同时提供一个函数 `strtou8` 用于将字符串转换为 `u8` 类型。例如：
 
     ```c
     // file: u8_complex.h
-
-    static const u8 HE_NULL = {};
 
     u8 strtou8(const char*, char**); // 仅声明
     ```

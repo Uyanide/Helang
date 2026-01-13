@@ -27,8 +27,6 @@ u8 strtou8_ll(const char* str, char** end);
 
 u8 strtou8_ull(const char* str, char** end);
 
-static const u8 HE_NULL = {};
-
 #define strtou8(C, E)                    \
     _Generic((HE_NULL),                  \
         char: strtou8_l,                 \
@@ -45,6 +43,8 @@ static const u8 HE_NULL = {};
         double: strtou8_d)(C, E)
 
 #endif
+
+extern const u8 HE_NULL;
 
 typedef int (*HE_FUNC)(u8 flags[], size_t size, va_list* args);
 

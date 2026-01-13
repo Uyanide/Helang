@@ -30,6 +30,8 @@ u8 strtou8_ull(const char* str, char** end) {
 
 #endif
 
+const u8 HE_NULL = {0};
+
 int he_invoke(HE_FUNC func, const char* flags_str, ...) {
     // Calculate number of flags
     size_t cap    = 1;
