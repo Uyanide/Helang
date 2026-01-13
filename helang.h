@@ -40,7 +40,8 @@ u8 strtou8_ull(const char* str, char** end);
         long long: strtou8_ll,           \
         unsigned long long: strtou8_ull, \
         float: strtou8_f,                \
-        double: strtou8_d)(C, E)
+        double: strtou8_d,               \
+        default: strtou8_d)(C, E)
 
 #endif
 
