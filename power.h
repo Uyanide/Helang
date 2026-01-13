@@ -6,8 +6,8 @@
 
 #include "helang.h"
 
-extern HE_FUNC powerCon_impl;
+HE_INTERFACE(powerCon_func);
 
-#define powerCon(flags, ...) he_invoke(powerCon_impl, HE_FLAGS(flags), __VA_ARGS__)
+#define powerCon(flags, ...) he_invoke(powerCon_func, HE_FLAGS(flags), __VA_ARGS__)
 
 #endif  // HELANG_POWER_H
