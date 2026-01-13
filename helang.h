@@ -7,7 +7,7 @@
 
 typedef uint8_t u8;
 
-typedef int (*HE_FUNC)(u8 flags[], size_t size, va_list args);
+typedef int (*HE_FUNC)(u8 flags[], size_t size, va_list* args);
 
 #define HE_FLAGS(x) #x
 

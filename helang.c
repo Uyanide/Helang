@@ -4,32 +4,38 @@
 #include <stdlib.h>
 #include <string.h>
 
-static const size_t FLAGS_CAP_INIT = 10;
-static const size_t FLAGS_CAP_FACT = 2;
+int he_invoke(HE_FUNC func, const char* flags_str, ...) {
+    // Calculate number of flags
+    size_t cap    = 1;
+    const char* p = flags_str;
+    while (*p) cap += (*p++ == '|');
 
-u8* he_parse_flags(const char* flags, size_t* size) {
-    u8* ret     = NULL;
-    char* cpy   = strdup(flags);
-    char* token = strtok(cpy, "|");
-    size_t cap  = 0;
-    do {
-        while (*size >= cap) {
-            cap = cap ? cap * FLAGS_CAP_FACT : FLAGS_CAP_INIT;
-            ret = (u8*)realloc(ret, sizeof(u8) * (cap));
+    // NO VLA, no
+    u8* flags   = (u8*)malloc(sizeof(u8) * cap);
+    size_t size = 0;
+
+    p = flags_str;
+    char* end;
+    while (*p) {
+        if (*p == '|' || *p == ' ') {
+            p++;
+            continue;
         }
-        ret[(*size)++] = (u8)atoi(token);
-    } while ((token = strtok(NULL, "|")) != NULL);
-    free(cpy);
-    return ret;
-}
+        long val = strtol(p, &end, 10);
+        if (p == end) {
+            p++;
+            continue;
+        }
+        flags[size++] = (u8)val;
+        p             = end;
+    }
 
-int he_invoke(HE_FUNC func, const char* flags, ...) {
-    size_t size     = 0;
-    u8* parsedFlags = he_parse_flags(flags, &size);
     va_list args;
-    va_start(args, flags);
-    int result = func(parsedFlags, size, args);
+    va_start(args, flags_str);
+    int result = func(flags, size, &args);
     va_end(args);
-    free(parsedFlags);
+
+    free(flags);
     return result;
 }
+
